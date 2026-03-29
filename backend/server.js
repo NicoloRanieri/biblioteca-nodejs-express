@@ -79,6 +79,90 @@ app.delete("/libri/:id", async (req, res) => {
 });
 
 
+//ricerca di un libro per titolo
+app.get("/libri/ricerca", async (req, res) => {
+  const { titolo } = req.query;
+
+  try {
+    const response = await fetch(API_URL);
+    const libri = await response.json();
+
+    const risultati = libri.filter(libro => 
+        libro.titolo.toLowerCase().includes(titolo.toLocaleLowerCase())
+    );
+
+    res.json(risultati);
+
+  } catch (error) {
+    res.status(500).json({ error: "Errore nella ricerca dei libri" });
+  }
+});
+
+//conteggio di quanti libri sono presenti nel sistema
+app.get("/libri/conteggio", async (req, res) => {
+  try {
+    const response = await fetch(API_URL);
+    const libri = await response.json();
+
+    const totale = libri.length;
+
+    res.json({ totale });
+
+  } catch (error) {
+    res.status(500).json({ error: "Errore nel conteggio dei libri" });
+  }
+});
+
+
+//conteggio per genere
+app.get("/libri/conteggio-genere", async (req, res) => {
+    const { genere } = req.query;
+
+  try {
+    const response = await fetch(API_URL);
+    const libri = await response.json();
+
+    const risultato = libri.filter(libro => 
+        libro.genere.toLowerCase() === genere.toLowerCase()
+    );
+
+    res.json(risultato.length);
+
+  } catch (error) {
+    res.status(500).json({ error: "Errore nel conteggio per genere" });
+  }
+});
+
+
+//cerca libri scritti dopo un certo anno fornito dall'utente
+app.get("/libri/dopo-anno", async (req, res) => {
+    const { anno } = req.query;
+
+    try {
+
+        if (!anno) {
+            return res.status(400).json({ error: "anno non specificato" });
+        }
+
+        const annoNum = Number(anno);
+
+        if(annoNum <= 0 || isNaN(annoNum)){
+            return res.status(400).json({ error: "anno inserito non valido" });
+        }
+
+        const response = await fetch(API_URL);
+        const libri = await response.json();
+
+        const risultato = libri.filter(libro => libro.anno >= annoNum);
+
+        res.json(risultato);
+
+    } catch (error) {
+        res.status(500).json({ error: "Errore nel filtraggio per anno" });
+    }
+});
+
+
 
 // Avvio del server
 app.listen(PORT, () => {
