@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca Digitale</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Biblioteca Digitale</h1>
+
+    <!-- Sezione: Visualizza tutti i libri -->
+    <section>
+        <h2>Tutti i libri</h2>
+        <button id="btn-tutti-libri">Carica libri</button>
+        <div id="lista-libri"></div>
+    </section>
+
+    <!-- Sezione: Inserisci un libro -->
+    <section>
+        <h2>Inserisci un nuovo libro</h2>
+        <form id="form-inserisci">
+            <input type="text" id="titolo" placeholder="Titolo" required>
+            <input type="text" id="autore" placeholder="Autore" required>
+            <input type="text" id="genere" placeholder="Genere" required>
+            <input type="number" id="anno" placeholder="Anno" required>
+            <input type="text" id="extra" placeholder="prezzo">
+            <button type="submit">Inserisci</button>
+        </form>
+    </section>
+
+    <!-- Sezione: Modifica libro -->
+    <section>
+        <h2>Modifica un libro</h2>
+        <form id="form-modifica">
+            <input type="text" id="id-modifica" placeholder="ID libro" required>
+            <input type="text" id="titolo-mod" placeholder="Nuovo titolo">
+            <input type="text" id="autore-mod" placeholder="Nuovo autore">
+            <input type="text" id="genere-mod" placeholder="Nuovo genere">
+            <input type="number" id="anno-mod" placeholder="Nuovo anno">
+            <input type="text" id="extra-mod" placeholder="Nuovo prezzo">
+            <button type="submit">Modifica</button>
+        </form>
+    </section>
+
+    <!-- Sezione: Elimina libro -->
+    <section>
+        <h2>Elimina un libro</h2>
+        <form id="form-elimina">
+            <input type="text" id="id-elimina" placeholder="ID libro" required>
+            <button type="submit">Elimina</button>
+        </form>
+    </section>
+
+    <!-- Sezione: Elaborazioni -->
+    <section>
+        <h2>Elaborazioni</h2>
+
+        <button id="btn-conteggio">Conteggio totale libri</button>
+        <div id="risultato-conteggio"></div>
+
+        <h3>Conteggio per genere</h3>
+        <input type="text" id="genere-conteggio" placeholder="Genere">
+        <button id="btn-conteggio-genere">Conta</button>
+        <div id="risultato-conteggio-genere"></div>
+
+        <h3>Libri dopo un certo anno</h3>
+        <input type="number" id="anno-filtro" placeholder="Anno">
+        <button id="btn-dopo-anno">Filtra</button>
+        <div id="risultato-dopo-anno"></div>
+
+        <h3>Libro più recente</h3>
+        <button id="btn-piu-recente">Mostra</button>
+        <div id="risultato-piu-recente"></div>
+
+        <h3>Ordinamento per anno</h3>
+        <select id="ordine-anno">
+            <option value="cre">Crescente</option>
+            <option value="decre">Decrescente</option>
+        </select>
+        <button id="btn-ordina-anno">Ordina</button>
+        <div id="risultato-ordinamento"></div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

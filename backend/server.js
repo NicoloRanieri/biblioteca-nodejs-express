@@ -9,6 +9,8 @@ app.use(express.json());
 
 const API_URL = "https://69c7cd8063393440b3172939.mockapi.io/libro";
 
+app.use(express.static("frontend"));
+
 
 app.get("/", (req, res) => {
   res.send("Backend della biblioteca attivo!");
@@ -42,24 +44,36 @@ app.post("/libri", async (req, res) => {
   }
 });
 
-//modifica di un libro in particolare
+// modifica di un libro in particolare
 app.put("/libri/:id", async (req, res) => {
-  const id = req.params.id;
+    const id = req.params.id;
 
-  try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body)
-    });
+    try {
+        // 1. Controllo se il libro esiste
+        const rispostaGet = await fetch(`${API_URL}/${id}`);
+        const libroEsistente = await rispostaGet.json();
 
-    const data = await response.json();
-    res.json(data);
+        // MockAPI restituisce {} se l'id non esiste
+        if (!libroEsistente.id) {
+            return res.status(404).json({ errore: "Libro non trovato" });
+        }
 
-  } catch (error) {
-    res.status(500).json({ error: "Errore nella modifica del libro" });
-  }
+        // 2. Se esiste, procedo con la modifica
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(req.body)
+        });
+
+        const data = await response.json();
+        res.json(data);
+
+    } catch (error) {
+        console.error("Errore PUT:", error);
+        res.status(500).json({ errore: "Errore nella modifica del libro" });
+    }
 });
+
 
 //eliminazione di un libro
 app.delete("/libri/:id", async (req, res) => {
