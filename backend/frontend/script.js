@@ -63,40 +63,53 @@ document.getElementById("form-inserisci").addEventListener("submit", (e) => {
 
 
 
-// MODIFICA DI UN LIBRO ESISTENTE
-document.getElementById("form-modifica").addEventListener("submit", (e) => {
+document.getElementById("form-modifica").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const id = document.getElementById("id-modifica").value;
 
-    // Creiamo un oggetto SOLO con i campi compilati
     const datiModifica = {};
 
     const titolo = document.getElementById("titolo-mod").value;
     const autore = document.getElementById("autore-mod").value;
     const genere = document.getElementById("genere-mod").value;
     const anno = document.getElementById("anno-mod").value;
-    const extra = document.getElementById("extra-mod").value;
+    const prezzo = document.getElementById("extra-mod").value;
 
     if (titolo) datiModifica.titolo = titolo;
     if (autore) datiModifica.autore = autore;
     if (genere) datiModifica.genere = genere;
     if (anno) datiModifica.anno = Number(anno);
-    if (extra) datiModifica.extra = extra;
+    if (prezzo) datiModifica.prezzo = prezzo;
 
-    fetch(`/libri/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datiModifica)
-    })
-    .then(res => res.json())
-    .then(data => {
+    try {
+        const res = await fetch(`/libri/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datiModifica)
+        });
+
+        const data = await res.json();
+
+        // --- GESTIONE ERRORE ID INESISTENTE ---
+        if (data === "Not found") {
+            alert("ID inesistente. Nessun libro modificato.");
+            return;
+        }
+
+        // --- GESTIONE ALTRI ERRORI ---
+        if (!res.ok) {
+            alert("Errore nella modifica del libro.");
+            return;
+        }
+
+        // --- SUCCESSO ---
         console.log("Libro modificato:", data);
         alert("Libro modificato correttamente!");
         document.getElementById("form-modifica").reset();
-    })
-    .catch(err => {
-        console.error("Errore nella modifica:", err);
-        alert("Errore nella modifica del libro");
-    });
+
+    } catch (err) {
+        console.error("Errore nella fetch PUT:", err);
+        alert("Errore di comunicazione con il server.");
+    }
 });

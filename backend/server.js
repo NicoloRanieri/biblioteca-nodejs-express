@@ -27,6 +27,20 @@ app.get("/libri", async (req, res) => {
   }
 });
 
+//visualizza un libro nello specifico
+app.get("/libri/:id", async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ errore: "Errore nel server" });
+    }
+});
+
+
 //inserisce un nuovo libro
 app.post("/libri", async (req, res) => {
   try {
@@ -53,8 +67,7 @@ app.put("/libri/:id", async (req, res) => {
         const rispostaGet = await fetch(`${API_URL}/${id}`);
         const libroEsistente = await rispostaGet.json();
 
-        // MockAPI restituisce {} se l'id non esiste
-        if (!libroEsistente.id) {
+        if (!libroEsistente) {
             return res.status(404).json({ errore: "Libro non trovato" });
         }
 
