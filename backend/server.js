@@ -187,6 +187,36 @@ app.get("/libri/piu-recente", async (req, res) => {
 });
 
 
+//ordinamento per anno (crescente o decrescente)
+app.get("/libri/ordinati-anno", async (req, res) => {
+    const { ordine } = req.query; // cre o decre
+
+    try {
+        const response = await fetch(API_URL);
+        const libri = await response.json();
+
+        if(!ordine){
+            res.status(400).json({ error: "metodo di ordinamento non specificato" });
+        }
+
+        if(ordine === "cre"){
+            const risultato = libri.sort((a,b) => a.anno - b.anno);
+            res.json(risultato);
+        }else if(ordine === "decre"){
+           const risultato = libri.sort((a,b) => b.anno - a.anno);
+           res.json(risultato); 
+        }else{
+            res.status(400).json({ error: "metodo di ordinamento non valido" });
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ error: "Errore nell'ordinamento per anno" });
+    }
+});
+
+
+
 
 
 // Avvio del server
