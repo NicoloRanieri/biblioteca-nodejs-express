@@ -163,6 +163,31 @@ app.get("/libri/dopo-anno", async (req, res) => {
 });
 
 
+// libro più recente
+app.get("/libri/piu-recente", async (req, res) => {
+    try {
+        const response = await fetch(API_URL);
+        const libri = await response.json();
+
+        if (libri.length === 0) {
+            return res.json({ message: "Nessun libro disponibile" });
+        }        
+
+        let libroPiuRecente = libri[0];
+        for(libro of libri){
+            if(libro.anno > libroPiuRecente.anno){
+                libroPiuRecente = libro;
+            }
+        }
+        res.json(libroPiuRecente);
+
+    } catch (error) {
+        res.status(500).json({ error: "Errore nel calcolo del libro più recente" });
+    }
+});
+
+
+
 
 // Avvio del server
 app.listen(PORT, () => {
