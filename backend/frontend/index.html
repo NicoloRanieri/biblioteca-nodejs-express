@@ -59,27 +59,19 @@
         <p id="conteggio-libri">Totale libri: ...</p>
         <div id="risultato-conteggio"></div>
 
-        <h3>Conteggio per genere</h3>
-        <input type="text" id="genere-conteggio" placeholder="Genere">
-        <button id="btn-conteggio-genere">Conta</button>
-        <div id="risultato-conteggio-genere"></div>
+        <form id="form-ricerca-titolo">
+            <input type="text" id="titolo-ricerca" placeholder="Cerca per titolo..." required>
+            <button type="submit">Cerca</button>
+        </form>
+        <div id="risultati-ricerca"></div>
 
-        <h3>Libri dopo un certo anno</h3>
-        <input type="number" id="anno-filtro" placeholder="Anno">
-        <button id="btn-dopo-anno">Filtra</button>
-        <div id="risultato-dopo-anno"></div>
+        <form id="form-conteggio-genere">
+        <input type="text" id="genere-conteggio" placeholder="Inserisci un genere..." required>
+          <button type="submit">Conta</button>
+        </form>
+        <p id="risultato-conteggio-genere"></p>
 
-        <h3>Libro più recente</h3>
-        <button id="btn-piu-recente">Mostra</button>
-        <div id="risultato-piu-recente"></div>
 
-        <h3>Ordinamento per anno</h3>
-        <select id="ordine-anno">
-            <option value="cre">Crescente</option>
-            <option value="decre">Decrescente</option>
-        </select>
-        <button id="btn-ordina-anno">Ordina</button>
-        <div id="risultato-ordinamento"></div>
     </section>
 
     <script src="script.js"></script>

@@ -36,8 +36,8 @@ app.get("/libri/conteggio", async (req, res) => {
 
 
 //ricerca di un libro per titolo
-app.get("/libri/ricerca", async (req, res) => {
-  const { titolo } = req.query;
+app.get("/libri/ricerca/:titolo", async (req, res) => {
+  const titolo = req.params.titolo;
 
   try {
     const response = await fetch(API_URL);
@@ -55,21 +55,10 @@ app.get("/libri/ricerca", async (req, res) => {
 });
 
 
-// visualizza tutti i libri
-app.get("/libri/cont", async (req, res) => {
-  try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Errore nel recupero dei libri" });
-  }
-});
-
 
 //conteggio per genere
-app.get("/libri/conteggio-genere", async (req, res) => {
-    const { genere } = req.query;
+app.get("/libri/conteggio-genere/:genere", async (req, res) => {
+    const genere = req.params.genere;
 
   try {
     const response = await fetch(API_URL);
@@ -77,9 +66,9 @@ app.get("/libri/conteggio-genere", async (req, res) => {
 
     const risultato = libri.filter(libro => 
         libro.genere.toLowerCase() === genere.toLowerCase()
-    );
+    ).length;
 
-    res.json(risultato.length);
+    res.json( { risultato } );
 
   } catch (error) {
     res.status(500).json({ error: "Errore nel conteggio per genere" });

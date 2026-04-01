@@ -175,4 +175,62 @@ async function mostraConteggioLibri() {
 }
 
 
+//ricerca per titolo
+document.getElementById("form-ricerca-titolo").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const titolo = document.getElementById("titolo-ricerca").value;
+
+    try {
+        const res = await fetch(`/libri/ricerca/${titolo}`);
+        const risultati = await res.json();
+
+        const container = document.getElementById("risultati-ricerca");
+        container.innerHTML = ""; // pulizia risultati precedenti
+
+        if (risultati.length === 0) {
+            container.innerHTML = "<p>Nessun libro trovato.</p>";
+            return;
+        }
+
+        risultati.forEach(libro => {
+            const div = document.createElement("div");
+            div.classList.add("libro");
+            div.innerHTML = `
+                <h3>${libro.titolo}</h3>
+                <p><strong>Autore:</strong> ${libro.autore}</p>
+                <p><strong>Genere:</strong> ${libro.genere}</p>
+                <p><strong>Anno:</strong> ${libro.anno}</p>
+            `;
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error("Errore nella ricerca:", err);
+        alert("Errore nella ricerca dei libri");
+    }
+});
+
+
+//conteggio per genere
+document.getElementById("form-conteggio-genere").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const genere = document.getElementById("genere-conteggio").value;
+
+    try {
+        const res = await fetch(`/libri/conteggio-genere/${genere}`);
+        const data = await res.json();
+
+        // data = { totale: numero }
+        document.getElementById("risultato-conteggio-genere").textContent =
+            `Libri nel genere "${genere}": ${data.risultato}`;
+
+    } catch (err) {
+        console.error("Errore nel conteggio per genere:", err);
+        document.getElementById("risultato-conteggio-genere").textContent =
+            "Errore nel conteggio dei libri per genere.";
+    }
+});
+
 
