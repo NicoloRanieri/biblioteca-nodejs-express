@@ -2,6 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
     <title>Biblioteca Digitale</title>
 </head>
 <body>
@@ -53,26 +54,62 @@
 
     <!-- Sezione: Elaborazioni -->
     <section>
-        <h2>Elaborazioni</h2>
+    <h2>Elaborazioni</h2>
 
+    <div class="elaborazione-box">
+        <h3>Conteggio totale libri</h3>
         <button onclick="mostraConteggioLibri()">Aggiorna conteggio</button>
-        <p id="conteggio-libri">Totale libri: ...</p>
-        <div id="risultato-conteggio"></div>
+        <p id="conteggio-libri" class="risultato">Totale libri: ...</p>
+    </div>
 
+    <div class="elaborazione-box">
+        <h3>Ricerca per titolo</h3>
         <form id="form-ricerca-titolo">
             <input type="text" id="titolo-ricerca" placeholder="Cerca per titolo..." required>
             <button type="submit">Cerca</button>
         </form>
-        <div id="risultati-ricerca"></div>
+        <div id="risultati-ricerca" class="risultato"></div>
+    </div>
 
+    <div class="elaborazione-box">
+        <h3>Conteggio per genere</h3>
         <form id="form-conteggio-genere">
-        <input type="text" id="genere-conteggio" placeholder="Inserisci un genere..." required>
-          <button type="submit">Conta</button>
+            <input type="text" id="genere-conteggio" placeholder="Inserisci un genere..." required>
+            <button type="submit">Conta</button>
         </form>
-        <p id="risultato-conteggio-genere"></p>
+        <p id="risultato-conteggio-genere" class="risultato"></p>
+    </div>
 
+    <div class="elaborazione-box">
+        <h3>Libri dopo un certo anno</h3>
+        <form id="form-dopo-anno">
+            <input type="number" id="anno-ricerca" placeholder="Inserisci un anno..." required>
+            <button type="submit">Cerca</button>
+        </form>
+        <div id="risultati-dopo-anno" class="risultato"></div>
+    </div>
+
+    <div class="elaborazione-box">
+        <h3>Libro più recente</h3>
+        <button id="btn-piu-recente">Mostra libro più recente</button>
+        <div id="risultato-piu-recente" class="risultato"></div>
+    </div>
+
+    <div class="elaborazione-box">
+        <h3>Ordinamento per anno</h3>
+        <form id="form-ordinati-anno">
+            <select id="ordine-anno" required>
+                <option value="">Seleziona ordine</option>
+                <option value="cre">Dal più vecchio al più recente</option>
+                <option value="decre">Dal più recente al più vecchio</option>
+            </select>
+            <button type="submit">Ordina</button>
+        </form>
+        <div id="risultati-ordinati-anno" class="risultato"></div>
+    </div>
 
     </section>
+
 
     <script src="script.js"></script>
 </body>

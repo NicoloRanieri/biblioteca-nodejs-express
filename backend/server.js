@@ -77,14 +77,14 @@ app.get("/libri/conteggio-genere/:genere", async (req, res) => {
 
 
 //cerca libri scritti dopo un certo anno fornito dall'utente
-app.get("/libri/dopo-anno", async (req, res) => {
-    const { anno } = req.query;
+app.get("/libri/dopo-anno/:anno", async (req, res) => {
+    const anno = req.params.anno;
+
+    if (!anno) {
+      return res.status(400).json({ error: "anno non specificato" });
+    }
 
     try {
-
-        if (!anno) {
-            return res.status(400).json({ error: "anno non specificato" });
-        }
 
         const annoNum = Number(anno);
 
@@ -130,8 +130,8 @@ app.get("/libri/piu-recente", async (req, res) => {
 
 
 //ordinamento per anno (crescente o decrescente)
-app.get("/libri/ordinati-anno", async (req, res) => {
-    const { ordine } = req.query; // cre o decre
+app.get("/libri/ordinati-anno/:ordine", async (req, res) => {
+    const ordine = req.params.ordine; // cre o decre
 
     try {
         const response = await fetch(API_URL);

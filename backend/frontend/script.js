@@ -234,3 +234,110 @@ document.getElementById("form-conteggio-genere").addEventListener("submit", asyn
 });
 
 
+//ricerca per libri scritti dopo un certo anno
+document.getElementById("form-dopo-anno").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const anno = document.getElementById("anno-ricerca").value;
+
+    try {
+        const res = await fetch(`/libri/dopo-anno/${anno}`);
+        const libri = await res.json();
+
+        const container = document.getElementById("risultati-dopo-anno");
+        container.innerHTML = ""; // pulizia risultati precedenti
+
+        if (libri.length === 0) {
+            container.innerHTML = `<p>Nessun libro trovato dopo l'anno ${anno}.</p>`;
+            return;
+        }
+
+        libri.forEach(libro => {
+            const div = document.createElement("div");
+            div.classList.add("libro");
+            div.innerHTML = `
+                <h3>${libro.titolo}</h3>
+                <p><strong>Autore:</strong> ${libro.autore}</p>
+                <p><strong>Genere:</strong> ${libro.genere}</p>
+                <p><strong>Anno:</strong> ${libro.anno}</p>
+            `;
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error("Errore nella ricerca dopo anno:", err);
+        document.getElementById("risultati-dopo-anno").textContent =
+            "Errore nella ricerca dei libri.";
+    }
+});
+
+
+//mostrare il libro piu recente
+document.getElementById("btn-piu-recente").addEventListener("click", async () => {
+    try {
+        const res = await fetch("/libri/piu-recente");
+        const libro = await res.json();
+
+        const container = document.getElementById("risultato-piu-recente");
+        container.innerHTML = ""; // pulizia precedente
+
+        if (!libro || Object.keys(libro).length === 0) {
+            container.innerHTML = "<p>Nessun libro trovato.</p>";
+            return;
+        }
+
+        container.innerHTML = `
+            <h3>${libro.titolo}</h3>
+            <p><strong>Autore:</strong> ${libro.autore}</p>
+            <p><strong>Genere:</strong> ${libro.genere}</p>
+            <p><strong>Anno:</strong> ${libro.anno}</p>
+        `;
+
+    } catch (err) {
+        console.error("Errore nel recupero del libro più recente:", err);
+        document.getElementById("risultato-piu-recente").textContent =
+            "Errore nel recupero del libro più recente.";
+    }
+});
+
+
+//mostrare i libri in un ordine scelto dall'utente
+document.getElementById("form-ordinati-anno").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const ordine = document.getElementById("ordine-anno").value;
+
+    try {
+        const res = await fetch(`/libri/ordinati-anno/${ordine}`);
+        const libri = await res.json();
+
+        const container = document.getElementById("risultati-ordinati-anno");
+        container.innerHTML = ""; // pulizia risultati precedenti
+
+        if (libri.length === 0) {
+            container.innerHTML = "<p>Nessun libro trovato.</p>";
+            return;
+        }
+
+        libri.forEach(libro => {
+            const div = document.createElement("div");
+            div.classList.add("libro");
+            div.innerHTML = `
+                <h3>${libro.titolo}</h3>
+                <p><strong>Autore:</strong> ${libro.autore}</p>
+                <p><strong>Genere:</strong> ${libro.genere}</p>
+                <p><strong>Anno:</strong> ${libro.anno}</p>
+            `;
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error("Errore nell'ordinamento per anno:", err);
+        document.getElementById("risultati-ordinati-anno").textContent =
+            "Errore nell'ordinamento dei libri.";
+    }
+});
+
+
+
+
