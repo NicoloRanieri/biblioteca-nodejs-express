@@ -1,10 +1,8 @@
 const express = require("express");
-const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
 app.use(express.json());
 
 const API_URL = "https://69c7cd8063393440b3172939.mockapi.io/libro";
