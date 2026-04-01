@@ -1,6 +1,6 @@
 // Quando clicco il bottone, carico tutti i libri
 document.getElementById("btn-tutti-libri").addEventListener("click", () => {
-    console.log("bottone cliccato");
+
     fetch("/libri")   // chiamata al backend
         .then(res => res.json())   // trasformo la risposta in JSON
         .then(libri => {
@@ -113,3 +113,66 @@ document.getElementById("form-modifica").addEventListener("submit", async (e) =>
         alert("Errore di comunicazione con il server.");
     }
 });
+
+
+// ELIMINAZIONE DI UN LIBRO
+document.getElementById("form-elimina").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById("id-elimina").value;
+
+    // --- CONFERMA ELIMINAZIONE ---
+    const conferma = confirm(`Sei sicuro di voler eliminare il libro con ID ${id}?`);
+    if (!conferma) {
+        return; // Utente ha annullato
+    }
+
+    try {
+        const res = await fetch(`/libri/${id}`, {
+            method: "DELETE"
+        });
+
+        const data = await res.json();
+
+        // --- GESTIONE ERRORE ID INESISTENTE ---
+        if (data === "Not found" || data.errore === "Libro non trovato") {
+            alert("ID inesistente. Nessun libro eliminato.");
+            return;
+        }
+
+        // --- GESTIONE ALTRI ERRORI ---
+        if (!res.ok) {
+            alert("Errore nell'eliminazione del libro.");
+            return;
+        }
+
+        // --- SUCCESSO ---
+        alert("Libro eliminato correttamente!");
+        document.getElementById("form-elimina").reset();
+
+    } catch (err) {
+        console.error("Errore nella fetch DELETE:", err);
+        alert("Errore di comunicazione con il server.");
+    }
+});
+
+
+//recupero dal backend del numero totale di libri
+async function mostraConteggioLibri() {
+    try {
+        const res = await fetch("/libri/conteggio");
+        const data = await res.json();
+
+        // data = { totale: numero }
+        document.getElementById("conteggio-libri").textContent =
+            `Totale libri: ${data.totale}`;
+
+    } catch (err) {
+        console.error("Errore nel conteggio:", err);
+        document.getElementById("conteggio-libri").textContent =
+            "Errore nel conteggio dei libri";
+    }
+}
+
+
+

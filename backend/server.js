@@ -11,97 +11,26 @@ const API_URL = "https://69c7cd8063393440b3172939.mockapi.io/libro";
 
 app.use(express.static("frontend"));
 
-
-app.get("/", (req, res) => {
-  res.send("Backend della biblioteca attivo!");
+// Avvio del server
+app.listen(PORT, () => {
+  console.log(`Server avviato su http://localhost:${PORT}`);
 });
 
-// visualizza tutti i libri
-app.get("/libri", async (req, res) => {
+
+// -------------------------------------- elaborazioni -------------------------------
+
+//conteggio di quanti libri sono presenti nel sistema
+app.get("/libri/conteggio", async (req, res) => {
   try {
     const response = await fetch(API_URL);
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Errore nel recupero dei libri" });
-  }
-});
+    const libri = await response.json();
 
-//visualizza un libro nello specifico
-app.get("/libri/:id", async (req, res) => {
-    const id = req.params.id;
+    const totale = libri.length;
 
-    try {
-        const response = await fetch(`${API_URL}/${id}`);
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ errore: "Errore nel server" });
-    }
-});
-
-
-//inserisce un nuovo libro
-app.post("/libri", async (req, res) => {
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body)
-    });
-
-    const data = await response.json();
-    res.json(data);
+    res.json({ totale });
 
   } catch (error) {
-    res.status(500).json({ error: "Errore nell'inserimento del libro" });
-  }
-});
-
-// modifica di un libro in particolare
-app.put("/libri/:id", async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        // 1. Controllo se il libro esiste
-        const rispostaGet = await fetch(`${API_URL}/${id}`);
-        const libroEsistente = await rispostaGet.json();
-
-        if (!libroEsistente) {
-            return res.status(404).json({ errore: "Libro non trovato" });
-        }
-
-        // 2. Se esiste, procedo con la modifica
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(req.body)
-        });
-
-        const data = await response.json();
-        res.json(data);
-
-    } catch (error) {
-        console.error("Errore PUT:", error);
-        res.status(500).json({ errore: "Errore nella modifica del libro" });
-    }
-});
-
-
-//eliminazione di un libro
-app.delete("/libri/:id", async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      method: "DELETE"
-    });
-
-    const data = await response.json();
-    res.json(data);
-
-  } catch (error) {
-    res.status(500).json({ error: "Errore nell'eliminazione del libro" });
+    res.status(500).json({ error: "Errore nel conteggio dei libri" });
   }
 });
 
@@ -125,18 +54,15 @@ app.get("/libri/ricerca", async (req, res) => {
   }
 });
 
-//conteggio di quanti libri sono presenti nel sistema
-app.get("/libri/conteggio", async (req, res) => {
+
+// visualizza tutti i libri
+app.get("/libri/cont", async (req, res) => {
   try {
     const response = await fetch(API_URL);
-    const libri = await response.json();
-
-    const totale = libri.length;
-
-    res.json({ totale });
-
+    const data = await response.json();
+    res.json(data);
   } catch (error) {
-    res.status(500).json({ error: "Errore nel conteggio dei libri" });
+    res.status(500).json({ error: "Errore nel recupero dei libri" });
   }
 });
 
@@ -243,13 +169,108 @@ app.get("/libri/ordinati-anno", async (req, res) => {
 });
 
 
+// ---------------------------------------- crud ------------------------------------
 
 
-
-// Avvio del server
-app.listen(PORT, () => {
-  console.log(`Server avviato su http://localhost:${PORT}`);
+app.get("/", (req, res) => {
+  res.send("Backend della biblioteca attivo!");
 });
+
+// visualizza tutti i libri
+app.get("/libri", async (req, res) => {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Errore nel recupero dei libri" });
+  }
+});
+
+
+//visualizza un libro nello specifico
+app.get("/libri/:id", async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ errore: "Errore nel server" });
+    }
+});
+
+
+//inserisce un nuovo libro
+app.post("/libri", async (req, res) => {
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req.body)
+    });
+
+    const data = await response.json();
+    res.json(data);
+
+  } catch (error) {
+    res.status(500).json({ error: "Errore nell'inserimento del libro" });
+  }
+});
+
+// modifica di un libro in particolare
+app.put("/libri/:id", async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        // 1. Controllo se il libro esiste
+        const rispostaGet = await fetch(`${API_URL}/${id}`);
+        const libroEsistente = await rispostaGet.json();
+
+        if (!libroEsistente) {
+            return res.status(404).json({ errore: "Libro non trovato" });
+        }
+
+        // 2. Se esiste, procedo con la modifica
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(req.body)
+        });
+
+        const data = await response.json();
+        res.json(data);
+
+    } catch (error) {
+        console.error("Errore PUT:", error);
+        res.status(500).json({ errore: "Errore nella modifica del libro" });
+    }
+});
+
+
+//eliminazione di un libro
+app.delete("/libri/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE"
+    });
+
+    const data = await response.json();
+    res.json(data);
+
+  } catch (error) {
+    res.status(500).json({ error: "Errore nell'eliminazione del libro" });
+  }
+});
+
+
+
+
+
+
 
 
 
